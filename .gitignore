@@ -240,4 +240,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# archivos binarios de uploads
+uploads/
+
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,windows,macos,linux,node

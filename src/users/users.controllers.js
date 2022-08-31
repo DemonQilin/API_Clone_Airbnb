@@ -120,11 +120,21 @@ const deleteUser = id => {
     }
 };
 
+const editProfileImg = (userId, imgUrl) => {
+    const index = userDB.findIndex(user => user.id === userId);
+
+    if (index === -1) throw { message: 'User not found', status: 404 };
+
+    userDB[index].profile_img = imgUrl;
+    return userDB[index];
+}
+
 export default {
     createUser,
     getAllUsers,
     getUserById,
     getUserByEmail,
     editUser,
-    deleteUser
+    deleteUser,
+    editProfileImg
 }

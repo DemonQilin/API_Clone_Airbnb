@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import userController from './users.controllers.js';
 
 const getAll = (req, res) => {
@@ -138,6 +139,19 @@ const removeMyUser = (req, res) => {
     return res.status(204).json();
 };
 
+const profileImg = (req, res) => {
+    try {
+        const userId = req.user.id;
+        const imgPath = `http://${req.hostname}:${process.env.PORT}/api/v1/uploads/${req.file.filename}`;
+        const data = userController.editProfileImg(userId, imgPath);
+        res.status(200).json(data);
+        
+    } catch (error) {
+        res.status(error.status || 400).json({ message: error.message });
+    }
+
+};
+
 export default {
     getAll,
     getById,
@@ -146,5 +160,6 @@ export default {
     editUser,
     getMyUser,
     editMyUser,
-    removeMyUser
+    removeMyUser,
+    profileImg
 }
