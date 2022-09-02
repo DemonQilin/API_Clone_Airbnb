@@ -8,13 +8,16 @@ export default function (passport) {
     };
 
     passport.use(
-        new JwtStrategy(opts, (decoded, done) => {
-            const data = userController.getUserById(decoded.id);
-
-            if (!data) return done(null, false);
-
-            console.log('decoded jwt', decoded);
-            return done(null, decoded);
+        new JwtStrategy(opts, async (decoded, done) => {
+            try {
+                const response = await userController.getUserById(decoded.id);
+                if (!response) return done(null, false);
+                
+                console.log('decoded jwt', decoded);
+                return done(null, decoded);
+            } catch (error) {
+                done(error.message);
+            }
         })
     )
 }

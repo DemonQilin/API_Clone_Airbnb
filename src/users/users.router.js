@@ -10,8 +10,7 @@ const router = Router();
 router.use('/me', passport.authenticate('jwt', { session: false }));
 
 router.route('/')
-    .get(userServices.getAll)
-    .post(userServices.register);
+    .get(userServices.getAll);
 
 router.route('/me')
     .get(userServices.getMyUser)
