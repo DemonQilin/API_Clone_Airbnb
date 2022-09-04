@@ -1,4 +1,4 @@
-import { Users } from '../models/user.model.js';
+import { User } from '../models/user.model.js';
 import { hashPassword } from '../utils/crypts.js';
 
     /*{
@@ -52,7 +52,7 @@ const createUser = async data => {
     const { first_name, last_name, email, password, phone, birthday_date,profile_img, country
     } = data;
 
-    const newUser = await Users.create({
+    const newUser = await User.create({
         first_name,
         last_name,
         email,
@@ -63,7 +63,8 @@ const createUser = async data => {
         country,
         id: undefined,
         verified: undefined,
-        active: undefined
+        active: undefined,
+        role: undefined
     });
 
     return newUser;
