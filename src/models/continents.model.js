@@ -11,6 +11,7 @@ export const Continent = db.define('Continent', {
     name: {
         type: DataTypes.STRING,
         values: ["Europe", "Asia", "North America", "South America", "Africa", "Oceania", "Antarctica"],
-        allowNull: false
+        allowNull: false,
+        unique: true
     }
 }, { tableName: "continents", timestamps: false});

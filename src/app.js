@@ -15,6 +15,7 @@ import authMiddleware from './middleware/auth.middleware.js';
 // Base de datos
 import db from './utils/database.js';
 import { initModels } from './models/init_models.js';
+import testDb from './utils/testDB.js';
 
 // Autenticación
 authMiddleware(passport);
@@ -27,9 +28,11 @@ authMiddleware(passport);
         .then(() => console.log('Database authenticated'))
         .catch(err => console.log("No authenticate"));
     
-    await db.sync({force: true})
+    await db.sync({ force: true })
         .then(() => console.log('Database synced'))
-        .catch(err => console.log('No sync'))
+        .catch(err => console.log('No sync'));
+    
+    testDb();
 })();
 
 

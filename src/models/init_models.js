@@ -15,7 +15,7 @@ export const initModels = () => {
     // User <- Role
     Role.hasMany(User, {
         foreignKey: {
-            name: "role",
+            name: "role_id",
             allowNull: false
         }
     });
@@ -97,5 +97,14 @@ export const initModels = () => {
             name: "user_id",
             allowNull: false
         }
-     });
+    });
+    
+    // Countries -> Users
+    Country.hasOne(User, {
+        foreignKey: {
+            name: "country_id",
+            allowNull: false
+        }
+    });
+    User.belongsTo(Country);
 };

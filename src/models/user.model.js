@@ -57,10 +57,10 @@ export const User = db.define('User', {
         type: DataTypes.STRING,
         field: "profile_img"
     },
-    country: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
+    // country: {
+    //     type: DataTypes.STRING,
+    //     allowNull: false
+    // },
     status: {
         allowNull: false,
         type: DataTypes.STRING(20),
