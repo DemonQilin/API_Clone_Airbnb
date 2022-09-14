@@ -36,14 +36,28 @@ export const Accommodation = db.define("Accommodation", {
         type: DataTypes.REAL,
         allowNull: false
     },
-    hostId: {
-        type: DataTypes.UUID,
+    score: {
+        type: DataTypes.REAL,
         allowNull: false,
-        field: "host_id"
+        defaultValue: 0
     },
-    score: DataTypes.REAL,
     commision: {
         type: DataTypes.REAL,
         allowNull: false
+    },
+    ubicationDetail: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        field: 'ubication_detail'
+    },
+    coordinateN: {
+        type: DataTypes.REAL,
+        allowNull: false,
+        field: "coordinate_n"
+    },
+    coordinateE: {
+        type: DataTypes.REAL,
+        allowNull: false,
+        field: "coordinate_e"
     }
 }, { tableName: "accommodations" });

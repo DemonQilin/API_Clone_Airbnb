@@ -1,16 +1,17 @@
 import 'dotenv/config';
+import { errorHandlerHttp } from '../utils/error.handler.js';
 import userController from './users.controllers.js';
 
 const getAll = async (req, res) => {
     try {
-        const data = await userController.getAllUsers();
+        const users = await userController.getAllUsers();
     
         res.status(200).json({
-            items: data.length,
-            response: data
+            items: users.length,
+            users
         });
     } catch (error) {
-        res.status(500).json(error.message);
+        errorHandlerHttp(res, error);
     }
 };
 
@@ -20,11 +21,11 @@ const getById = async (req, res) => {
     try {
         const data = await userController.getUserById(id);
 
-        if (!data) throw { message: "User don't found" };
+        if (!data) throw { message: "User don't found", status: 404};
         
-        res.status(200).json(data);
+        res.status(200).json(data.toJSON());
     } catch (error) {
-        res.status(404).json({message: error.message});
+        errorHandlerHttp(res, error);
     }
 };
 
@@ -32,23 +33,37 @@ const register = async (req, res) => {
     try {
         const data = req.body;
     
-        if (!Object.keys(data).length) throw { message: 'Missing data' };
+        if (!Object.keys(data).length) throw { message: 'Missing data', status: 400 };
+        
         if (!(
-            data.first_name &&
-            data.last_name &&
+            data.firstName &&
+            data.lastName &&
+            data.gender &&
+            data.birthdayDate &&
             data.email &&
             data.password &&
-            data.phone &&
-            data.birthday_date &&
-            data.country
-        )) throw { message: `All fields must be completed` };
+            data.country &&
+            data.continent
+        )) throw {
+            message: `All fields should be completed`,
+            fields: {
+                firstName: "MyName",
+                lastName: "MyLastName",
+                gender: "MyGender",
+                birthdayDate: "YYYY-MM-DD",
+                email: "example@gmail.com",
+                password: "MySecretPasword123",
+                country: "MyCountry",
+                continent: "Should be one of these: Europe, Asia, North America, South America, Africa, Oceania or Antarctica"
+            },
+            status: 400
+        };
     
-        const newUser = await userController.createUser(data)
-            .then(({ dataValues: { password, ...res } }) => res);
+        const newUser = await userController.createUser(data);
         
-        res.status(201).json({ message: `User succesfully created`, newUser });
+        res.status(201).json({ message: `User succesfully created`, newUser});
     } catch (error) {
-        res.status(400).json({ message: (error.errors && error.errors[0]?.message) || error.message });
+        errorHandlerHttp(res, error);
     }
 };
 
@@ -65,39 +80,67 @@ const remove = async (req, res) => {
     }
 };
 
-const editUser = async (req, res) => {
+const editUser = partial => async (req, res) => {
     try {
         const id = req.params.id;
         const data = req.body;
-        
-        if (!Object.keys(data).length) throw { message: 'Missing data' };
+        const { role } = req.user;
 
-        if (!(
-            data.first_name &&
-            data.last_name &&
-            data.email &&
-            data.birthday_date &&
-            data.country &&
-            data.rol
-        )) throw {
-            message: "All fields must be completed",
+        const condition = partial
+            ? (
+                data.firstName ||
+                data.lastName ||
+                data.gender ||
+                data.birthdayDate ||
+                data.email ||
+                (data.country && data.continent) ||
+                data.status ||
+                data.verified ||
+                (data.phone || data.phone === null) ||
+                (data.dni || data.dni === null) ||
+                (data.address || data.address === null)
+            )
+            : (
+                data.firstName &&
+                data.lastName &&
+                data.gender &&
+                data.birthdayDate &&
+                data.email &&
+                (data.country && data.continent) &&
+                data.status &&
+                (data.phone || data.phone === null) &&
+                (data.dni || data.dni === null) &&
+                (data.address || data.address === null) &&
+                ((role === 'admin' && typeof data.verified === 'boolean') || (role !== 'admin'))
+            );
+        
+        if (!Object.keys(data).length) throw { message: 'Missing data', status: 404};
+
+        if (!condition) throw {
+            message: partial ? 'The request must contain at least one of the following fields' : `All fields must be completed`,
             fields: {
-                first_name: "string",
-                last_name: "string",
-                email: "examle@examle.com",
-                birthday_date: "DD/MM/YYYY",
-                country: "string",
-                rol: "normal"
-            }
+                firstName: "MyName",
+                lastName: "MyLastName",
+                gender: "MyGender",
+                birthdayDate: "YYYY-MM-DD",
+                email: "example@gmail.com",
+                country: "MyCountry",
+                continent: "Should be one of these: Europe, Asia, North America, South America, Africa, Oceania or Antarctica",
+                phone: "MyNumber or null",
+                dni: "MyDni or null",
+                address: "MyAddress or null",
+                status: "active or inactive",
+                verified: role === 'admin' ? 'true or false' : undefined
+            },
+            status: 400
         };
 
-
-        const response = await userController.editUser(id, data);
-        if (!response[0]) throw { message: "Invalid ID" };
+        const response = await userController.editUser(id || req.user.id, data, role);
+        if (!response[0]) throw { message: "Invalid ID", status: 404};
 
         res.status(200).json({ message: 'User was succesfully edited' });
     } catch (error) {
-        res.status(400).json({message: error.message});
+        errorHandlerHttp(res, error);
     }
 };
 
@@ -111,44 +154,6 @@ const getMyUser = async (req, res) => {
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
-};
-
-const editMyUser = async (req, res) => {
-    try {
-        const id = req.user.id;
-        const data = req.body;
-    
-        if (!Object.keys(data).length) throw { message: 'Missing data' };
-        
-        if (!(
-            data.first_name &&
-            data.last_name &&
-            data.email &&
-            data.birthday_date &&
-            data.country &&
-            data.active
-        )) throw {
-            message: "All fields must be completed",
-            fields: {
-                first_name: "My Name",
-                last_name: "My Last Name",
-                email: "examle@examle.com",
-                birthday_date: "DD/MM/YYYY",
-                country: "string",
-                active: true
-            }
-        };
-
-        const response = await userController.editUser(id, data);
-        if (!response[0]) throw { message: "Invalid ID" };
-
-        return res.status(200).json({ message: 'User was succesfully edited'});
-    } catch (error) {
-        res.status(400).json({ message: error.message, fields: error.fields || undefined});
-    }
-
-
-
 };
 
 const removeMyUser = async (req, res) => {
@@ -166,15 +171,22 @@ const removeMyUser = async (req, res) => {
 
 const profileImg = async (req, res) => {
     try {
+        const data = req.body;
         const userId = req.user.id;
-        const imgPath = `http://${req.hostname}:${process.env.PORT}/api/v1/uploads/${req.file.filename}`;
+        const file = req.file;
 
-        const response = await userController.editProfileImg(userId, imgPath);
-        if (!response[0]) throw { message: "Invalid ID" };
+        if (!file && !data.image_id) throw { message: 'Missing data', status: 400 };
+        
+        const imgPath = file
+            ? `http://${req.hostname}:${process.env.PORT}/api/v1/uploads/${req.file.filename}`
+            : null;
 
-        res.status(200).json({ message: 'Profile image was succesfully edited' });
+        const response = await userController.editProfileImg(userId, imgPath, data.image_id);
+        if (!response[0]) throw { message: "Profile image wasn't updated" };
+
+        res.status(200).json({ message: 'Profile image was succesfully updated' });
     } catch (error) {
-        res.status(error.status || 400).json({ message: error.message });
+        errorHandlerHttp(res, error);
     }
 
 };
@@ -186,7 +198,6 @@ export default {
     remove,
     editUser,
     getMyUser,
-    editMyUser,
     removeMyUser,
     profileImg
 }

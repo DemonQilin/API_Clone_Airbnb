@@ -10,6 +10,7 @@ export const Country = db.define("Country", {
     },
     name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     }
 }, { tableName: "countries", timestamps: false });

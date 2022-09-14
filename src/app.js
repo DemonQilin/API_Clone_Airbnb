@@ -7,7 +7,7 @@ import fs from 'fs';
 // Archivos de rutas
 import userRouter from './users/users.router.js';
 import authRouter from './auth/auth.router.js';
-import postRouter from './posts/post.router.js';
+import accommodationRouter from './accommodations/accommodations.router.js';
 
 // Middlewares
 import authMiddleware from './middleware/auth.middleware.js';
@@ -26,13 +26,13 @@ authMiddleware(passport);
 
     await db.authenticate()
         .then(() => console.log('Database authenticated'))
-        .catch(err => console.log("No authenticate"));
+        .catch(err => console.log("No authenticate", err.message));
     
-    await db.sync({ force: true })
+    await db.sync()
         .then(() => console.log('Database synced'))
-        .catch(err => console.log('No sync'));
+        .catch(err => console.log('No sync', err.message));
     
-    testDb();
+    await testDb();
 })();
 
 
@@ -44,28 +44,26 @@ const router = express.Router();
 // Habilita el req.body
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.status(200).json({ message: 'All ok!' });
-});
+app.get('/', (req, res) => { res.status(200).json({ message: 'All ok!' }) });
 
 app.use('/api/v1', router);
 router.use('/users', userRouter);
 router.use('/auth', authRouter);
-router.use('/posts', postRouter);
+router.use('/accommodations', accommodationRouter);
 
 // Endpoint imagenes de perfil
-router.get('/uploads/:imgName', (req, res) => {
-    try {
-        const { imgName } = req.params;
-        const { pathname: imgPath } = new URL(`../uploads/${imgName}`, import.meta.url);
+router.use('/uploads/:imgName', (req, res) => {
+        try {
+            const { imgName } = req.params;
+            const { pathname: imgPath } = new URL(`../uploads/images/users/profile/${imgName}`, import.meta.url);
 
-        if (!fs.existsSync(imgPath)) throw { message: "Image don't found", status: 404 };
+            if (!fs.existsSync(imgPath)) throw { message: "Image don't found", status: 404 };
 
-        res.status(200).sendFile(imgPath);
-    } catch (error) {
-        res.status(error.status || 500).json({ message: error.message });
-    }
-});
+            res.status(200).sendFile(imgPath);
+        } catch (error) {
+            res.status(error.status || 500).json({ message: error.message });
+        }
+    });
 
 app.listen(port, () => {
     try {

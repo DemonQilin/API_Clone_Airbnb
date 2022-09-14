@@ -1,4 +1,4 @@
-import { DataTypes, Deferrable } from "sequelize";
+import { DataTypes } from "sequelize";
 import db from "../utils/database.js";
 
 export const User = db.define('User', {
@@ -23,8 +23,8 @@ export const User = db.define('User', {
         allowNull: false
     },
     birthdayDate: {
-        allowNull: false,
         type: DataTypes.DATEONLY,
+        allowNull: false,
         field: "birthday_date",
         validate: {
             isDate: true
@@ -45,26 +45,24 @@ export const User = db.define('User', {
     phone: DataTypes.STRING(15),
     dni: DataTypes.STRING(30),
     address: DataTypes.STRING,
-    // role: {
-    //     type: DataTypes.UUID,
-    //     allowNull: false,
-    //     // references: {
-    //     //     model: Role,
-    //     //     key: "id"
-    //     // }
-    // },
     profileImg: {
         type: DataTypes.STRING,
         field: "profile_img"
     },
-    // country: {
-    //     type: DataTypes.STRING,
-    //     allowNull: false
-    // },
     status: {
         allowNull: false,
         type: DataTypes.STRING(20),
-        values: ["active", "inactive", "banned"],
-        defaultValue: "active"
+        defaultValue: "active",
+        validate: {
+            isIn: {
+                args: [["active", "inactive", "banned"]],
+                msg: "Must be active, inactive or banned"
+            }
+        }
+    },
+    verified: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     }
 }, { tableName: "users" });

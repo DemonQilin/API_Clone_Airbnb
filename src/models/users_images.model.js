@@ -12,12 +12,17 @@ export const UserImage = db.define('UserImage', {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            isUrl: true
+            // isUrl: true
         }
     },
-    // userId: {
-    //     type: DataTypes.UUID,
-    //     allowNull: false,
-    //     field: "user_id"
-    // }
+    type: {
+        type: DataTypes.STRING,
+        allowNull: null,
+        validate: {
+            isIn: {
+                args: [['profile', 'post', 'comment']],
+                msg: "Type must be 'profile', 'post' or 'comment'"
+            }
+        }
+    }
 }, { tableName: "users_images" });

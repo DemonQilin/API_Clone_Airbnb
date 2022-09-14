@@ -11,6 +11,6 @@ export const Role = db.define('Role', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
-        values: ["admin", "normal", "host", "moderator"]
+        values: ["admin", "host", "guest"]
     }
-}, {tableName: "roles"});
+}, {tableName: "roles", timestamps: false});
