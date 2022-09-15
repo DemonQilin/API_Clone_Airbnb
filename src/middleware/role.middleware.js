@@ -1,11 +1,13 @@
-export const middlewareRole = targetRole => (req, res, next) => {
+import { errorHandlerHttp } from "../utils/error.handler.js";
+
+export const middlewareRole = (targetRole, targetRole2) => (req, res, next) => {
     try {
         const { role } = req.user;
     
-        if (role !== targetRole) throw { message: 'User not authorized to make this request', status: 401};
+        if (role !== targetRole && role !== targetRole2) throw { message: 'User not authorized to make this request', status: 401 };
     
         next();
     } catch (error) {
-        res.status(error.status || 400).json({ message: error.message})
+        errorHandlerHttp(res, error);
     }
 };

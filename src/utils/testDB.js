@@ -26,7 +26,7 @@ const testDb = async () => {
         await Country.bulkCreate([
             { name: "Colombia", continent_id: await Continent.findOne({ where: { name: "South America" } }).then(res => res.id) },
             { name: "Francia", continent_id: await Continent.findOne({ where: { name: "Europe" } }).then(res => res.id) },
-            { name: "Japon", continent_id: await Continent.findOne({ where: { name: "Asia" } }).then(res => res.id) },
+            { name: "Japan", continent_id: await Continent.findOne({ where: { name: "Asia" } }).then(res => res.id) },
             { name: "Canada", continent_id: await Continent.findOne({ where: { name: "North America" } }).then(res => res.id) },
             { name: "Mexico", continent_id: await Continent.findOne({ where: { name: "North America" } }).then(res => res.id) },
             { name: "Egipto", continent_id: await Continent.findOne({ where: { name: "Africa" } }).then(res => res.id) },
@@ -78,8 +78,34 @@ const testDb = async () => {
                 phone: "3854756699",
                 dni: "1007478963",
                 address: "Algun lugar del mundo mexicano",
-                role_id: await Role.findOne({ where: { name: "guest" } }).then(res => res.id),
+                role_id: await Role.findOne({ where: { name: "host" } }).then(res => res.id),
                 country_id: await Country.findOne({ where: { name: "Mexico" } }).then(res => res.id),
+            },
+            {
+                firstName: "Junior",
+                lastName: "Pacheco",
+                gender: "Male",
+                birthdayDate: "2001-08-17",
+                email: "juniorPache@gmail.com",
+                password: hashPassword("Junior12345++"),
+                phone: "3207894565",
+                dni: "1000897654",
+                address: "En algún lugar del mundo japones",
+                role_id: await Role.findOne({ where: { name: "host" } }).then(res => res.id),
+                country_id: await Country.findOne({ where: { name: "Japan" } }).then(res => res.id)
+            },
+            {
+                firstName: "Paulina",
+                lastName: "Flores",
+                gender: "Female",
+                birthdayDate: "1999-04-13",
+                email: "pauliFlor123@gmail.com",
+                password: hashPassword("Paulina12345++"),
+                phone: "3017894525",
+                dni: "98526321",
+                address: "En algún lugar del mundo mexicano",
+                role_id: await Role.findOne({ where: { name: "guest" } }).then(res => res.id),
+                country_id: await Country.findOne({ where: { name: "Mexico" } }).then(res => res.id)
             }
         ], { validate: true });
 
@@ -92,13 +118,13 @@ const testDb = async () => {
                 beds: 8,
                 bathrooms: 5.5,
                 price: 350.45,
-                score: 0,
+                score: 8.6,
                 commision: 50.25,
                 ubicationDetail: 'Sector de Palmas cercano al CAI',
-                coordinateN: 4.4525487,
-                coordinateE: 35.452588,
-                host_id: await User.findOne({ where: { email: "juanes200012@gmail.com" } }).then(res => res.id),
-                city_id: await City.findOne({ where: { name: 'Medellin' } }).then(res => res.id),
+                latitude: 4.4525487,
+                longitude: 35.452588,
+                host_id: await User.findOne({ where: { email: "juniorPache@gmail.com" } }).then(res => res.id),
+                city_id: await City.findOne({ where: { name: 'Medellin' } }).then(res => res.id)
             },
             {
                 title: 'Apartamento Alto con vista al mar',
@@ -108,11 +134,11 @@ const testDb = async () => {
                 beds: 3,
                 bathrooms: 2.5,
                 price: 100.45,
-                score: 0,
+                score: 7.4,
                 commision: 25.25,
                 ubicationDetail: 'Al lado del mar azul',
-                coordinateN: 15.4525487,
-                coordinateE: 20.452588,
+                latitude: 15.4525487,
+                longitude: 20.452588,
                 host_id: await User.findOne({ where: { email: "sahidKick@gmail.com" } }).then(res => res.id),
                 city_id: await City.findOne({ where: { name: 'Cartagena' } }).then(res => res.id)
             }

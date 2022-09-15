@@ -18,23 +18,53 @@ export const Accommodation = db.define("Accommodation", {
     },
     guests: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            min: {
+                args: 1,
+                msg: "The minimum value for 'guests' is 1"
+            }
+        }
     },
     rooms: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            min: {
+                args: 1,
+                msg: "The minimum value for 'rooms' is 1"
+            }
+        }
     },
     beds: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            min: {
+                args: 1,
+                msg: "The minimum value for 'beds' is 1"
+            }
+        }
     },
     bathrooms: {
         type: DataTypes.REAL,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            min: {
+                args: 1,
+                msg: "The minimum value for 'bathrooms' is 1"
+            }
+        }
     },
     price: {
         type: DataTypes.REAL,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            min: {
+                args: 10.00,
+                msg: "The minimum value for 'price' is 10.00"
+            }
+        }
     },
     score: {
         type: DataTypes.REAL,
@@ -43,21 +73,42 @@ export const Accommodation = db.define("Accommodation", {
     },
     commision: {
         type: DataTypes.REAL,
-        allowNull: false
+        allowNull: false,
+        set() {
+            this.setDataValue('commision', 0.2 * this.price)
+        }
     },
     ubicationDetail: {
         type: DataTypes.TEXT,
         allowNull: false,
         field: 'ubication_detail'
     },
-    coordinateN: {
+    latitude: {
         type: DataTypes.REAL,
         allowNull: false,
-        field: "coordinate_n"
+        validate: {
+            min: {
+                args: -90,
+                msg: "The minimum value for 'latitude' is -90"
+            },
+            max: {
+                args: 90,
+                msg: "The maximum value for 'latitude' is 90"
+            }
+        }
     },
-    coordinateE: {
+    longitude: {
         type: DataTypes.REAL,
         allowNull: false,
-        field: "coordinate_e"
+        validate: {
+            min: {
+                args: -180,
+                msg: "The minimum value for 'longitude' is -180"
+            },
+            max: {
+                args: 180,
+                msg: "The maximum value for 'longitude' is 180"
+            }
+        }
     }
 }, { tableName: "accommodations" });
