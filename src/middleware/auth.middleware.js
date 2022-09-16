@@ -1,10 +1,12 @@
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import 'dotenv/config';
 import userController from '../users/users.controllers.js';
 
+const wordSecret = process.env.JWT_KEY;
 export default function (passport) {
     const opts = {
         jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('JWT'),
-        secretOrKey: "academlo"
+        secretOrKey: wordSecret
     };
 
     passport.use(

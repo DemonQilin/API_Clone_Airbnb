@@ -1,7 +1,9 @@
-import { loginUser } from './auth.controllers.js';
 import jwt from 'jsonwebtoken';
+import 'dotenv/config';
+import { loginUser } from './auth.controllers.js';
 import { errorHandlerHttp } from '../utils/error.handler.js';
 
+const wordSecret = process.env.JWT_KEY;
 const login = async (req, res) => {
     try {
         const data = req.body;
@@ -13,7 +15,7 @@ const login = async (req, res) => {
             id: response.id,
             email: response.email,
             role: response.role.name
-        }), 'academlo');
+        }), wordSecret);
 
         return res.status(200).json({ message: 'Successful authentication', token });
 
