@@ -100,9 +100,7 @@ https://airbnb-clone-jevl.onrender.com/api/v1/auth/register
 ```
 
 Recibe peticiones de tipo:
-- **POST :**
-    - [] Token JWT
-    - [] Role: admin
+- **POST**
 
 ### **Auth/login**
 ```
@@ -110,61 +108,4 @@ https://airbnb-clone-jevl.onrender.com/api/v1/auth/login
 ```
 
 Recibe peticiones de tipo:
-- **POST :**
-    - [] Token JWT
-    - [] Role: admin
-
-### **Accommodations**
-```
-https://airbnb-clone-jevl.onrender.com/api/v1/accommodations
-```
-
-Recibe peticiones de tipo:
-- **GET :**
-    - [] Token JWT
-    - [] Role: admin
-- **POST :**
-    - [x] Token JWT
-    - [x] Role: host
-
-### **Accommodations/:id**
-```
-https://airbnb-clone-jevl.onrender.com/api/v1/accommodations/:id
-```
-
-Recibe peticiones de tipo:
-- **GET :**
-    - [] Token JWT
-    - [] Role
-- **PUT :**
-    - [x] Token JWT
-    - [x] Role: admin, host
-- **PATCH :**
-    - [x] Token JWT
-    - [x] Role: admin, host
-- **DELETE :**
-    - [x] Token JWT
-    - [x] Role: admin, host
-
-### **Accommodations/:id/make-reservation**
-```
-https://airbnb-clone-jevl.onrender.com/api/v1/accommodations/:id/make-reservation
-```
-
-Recibe peticiones de tipo:
-- **POST :**
-    - [x] Token JWT
-    - [] Role
-
-### **Reservations/:id**
-```
-https://airbnb-clone-jevl.onrender.com/api/v1/reservations/:id
-```
-
-Recibe peticiones de tipo:
-- **PATCH :**
-    - [x] Token JWT
-    - [] Role
-- **DELETE :**
-    - [x] Token JWT
-    - [] Role
+- **POST**
