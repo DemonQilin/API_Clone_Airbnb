@@ -6,10 +6,9 @@ import { uploadProfile } from '../utils/multer.js';
 
 const router = Router();
 
-router.route('/')
-    .get(userServices.getAll);
+router.use('/', passport.authenticate('jwt', { session: false }));
 
-router.use('/me', passport.authenticate('jwt', { session: false }));
+router.get('/', middlewareRole('admin', 'host'), userServices.getAll);
 
 router.route('/me')
     .get(userServices.getMyUser)
@@ -18,10 +17,10 @@ router.route('/me')
     .delete(userServices.removeMyUser);
 
 router.route('/:id')
-    .get(userServices.getById)
-    .put(passport.authenticate('jwt', { session: false }), middlewareRole('admin'), userServices.editUser(false))
-    .patch(passport.authenticate('jwt', { session: false }), middlewareRole('admin'), userServices.editUser(true))
-    .delete(passport.authenticate('jwt', { session: false }), middlewareRole('admin'), userServices.remove);
+    .get(middlewareRole('admin', 'host'), userServices.getById)
+    .put(middlewareRole('admin'), userServices.editUser(false))
+    .patch(middlewareRole('admin'), userServices.editUser(true))
+    .delete(middlewareRole('admin'), userServices.remove);
 
 router.patch('/me/profile-img', uploadProfile, userServices.profileImg);
 

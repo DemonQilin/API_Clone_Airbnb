@@ -8,6 +8,7 @@ import fs from 'fs';
 import userRouter from './users/users.router.js';
 import authRouter from './auth/auth.router.js';
 import accommodationRouter from './accommodations/accommodations.router.js';
+import reservationRouter from './reservations/reservations.router.js';
 
 // Middlewares
 import authMiddleware from './middleware/auth.middleware.js';
@@ -50,6 +51,7 @@ app.use('/api/v1', router);
 router.use('/users', userRouter);
 router.use('/auth', authRouter);
 router.use('/accommodations', accommodationRouter);
+router.use('/reservations', reservationRouter);
 
 // Endpoint imagenes de perfil
 router.use('/uploads/:imgName', (req, res) => {

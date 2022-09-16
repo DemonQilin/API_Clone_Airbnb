@@ -18,7 +18,13 @@ export const Reservation = db.define("Reservation", {
     },
     adults: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            min: {
+                args: 1,
+                msg: "The minimum value for 'adults' is 1"
+            }
+        }
     },
     kids: {
         type: DataTypes.INTEGER,
@@ -35,14 +41,22 @@ export const Reservation = db.define("Reservation", {
         allowNull: false,
         defaultValue: 0
     },
-    score: DataTypes.REAL,
+    score: {
+        type: DataTypes.REAL,
+        validate: {
+            isNumeric: true,
+            min: {
+                args: 0.1,
+                msg: "The minimum value for 'score' is 0.1"
+            },
+            max: {
+                args: 10,
+                msg: "The miximum value for 'score' is 10"
+            }
+        }
+    },
     is_finished: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
-    },
-    is_canceled: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
     }
-
-}, { tableName: "reservations" });
+}, { tableName: "reservations", paranoid: true, deletedAt: "is_canceled"});
